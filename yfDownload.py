@@ -51,6 +51,6 @@ if tickers != [] or tickers != "" or tickers != None:
 	yfDf = yf.download(tickers, start=start,end=end,interval=interval,prepost=prepost,group_by=group_by)
 
 
-yfDf.reset_index()
+yfDf = yfDf.reset_index()
 st.dataframe(yfDf)
 st.markdown(get_table_download_link(yfDf),unsafe_allow_html=True)
