@@ -59,8 +59,8 @@ if tickers != [] or tickers != "" or tickers != None:
 try:
 	yfDf = yfDf.reset_index()
 	st.write(yfDf.columns)
-	yfDf["Datetime"] = yfDf["Datetime"].dt.tz_localize(None)
-	yfDf.set_index(('Datetime', ''))
+	yfDf["index"] = yfDf["index"].dt.tz_localize(None)
+	yfDf.set_index(('index', ''))
 except:
 	pass
 st.dataframe(yfDf)
