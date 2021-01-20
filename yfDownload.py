@@ -10,16 +10,10 @@ def get_table_download_link(df):
     in:  dataframe
     out: href string
     """
-    def to_excel(df):
-        output = BytesIO()
-        writer = pd.ExcelWriter(output, engine='xlsxwriter')
-        df.to_excel(writer, sheet_name='Sheet1')
-        writer.save()
-        processed_data = output.getvalue()
-        return processed_data
-    val = to_excel(df)
-    b64 = base64.b64encode(val)  # val looks like b'...'
-    return f'<a href="data:application/octet-stream;base64,{b64.decode()}" download="extract.xlsx">Download data as excel</a>'
+    csv = df.to_csv(index=False)
+    b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+    href = f'<a href="data:file/csv;base64,{b64}">Download csv file</a>'
+    return href
 
 def name_convert(name):
     searchval = 'yahoo finance '+name
@@ -56,12 +50,7 @@ if prepostChoice == False:
 if tickers != [] or tickers != "" or tickers != None:
 	yfDf = yf.download(tickers, start=start,end=end,interval=interval,prepost=prepost,group_by=group_by)
 
-try:
-	yfDf = yfDf.reset_index()
-	st.write(yfDf.columns)
-	yfDf["index"] = yfDf["index"].dt.tz_localize(None)
-	yfDf.set_index(('index', ''))
-except:
+
 	pass
 st.dataframe(yfDf)
 st.markdown(get_table_download_link(yfDf),unsafe_allow_html=True)
